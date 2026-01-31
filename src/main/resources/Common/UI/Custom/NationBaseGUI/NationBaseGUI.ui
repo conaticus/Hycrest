@@ -7,8 +7,8 @@ $C.@PageOverlay {
 
     #Title {
       Group {
-        $C.@Title #TitleText{
-          @Text = "Select Base Region";
+        $C.@Title #TitleText {
+          @Text = "Create Nation Base";
         }
       }
     }
@@ -26,10 +26,8 @@ $C.@PageOverlay {
             LayoutMode: Left;
             Anchor: (Top: 0, Left: 10, Bottom: 10);
             Label  {
-              Text: "Select a region on the map that your base will cover.";
-              Style: (
-                TextColor: #FFFFFF
-              );
+              Text: "Select a region on the map that your nation's base will cover.";
+              Style: (TextColor: #FFFFFF);
             }
           }
         }
@@ -37,7 +35,7 @@ $C.@PageOverlay {
         Group #ChunkInfo {
           FlexWeight: 1;
           LayoutMode: TopScrolling;
-          Padding: (Left: 10);
+          Padding: (Left: 10, Bottom: 10);
           ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
           Group #ChunkSection {
@@ -64,7 +62,7 @@ $C.@PageOverlay {
 
         $C.@TextButton #ConfirmButton {
             Anchor: (Top: 10, Width: 300, Height: 40);
-            Text: "Confirm Base Region";
+            Text: "Create Nation Base";
         }
       }
    }

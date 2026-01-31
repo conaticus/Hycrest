@@ -35,7 +35,7 @@ public class OpenNationBaseGuiCommand extends AbstractPlayerCommand {
             if (page != null)
                 return;
 
-            page = new NationBaseGUI(playerRef, chunkX, chunkZ, CustomPageLifetime.CanDismiss);
+            page = new NationBaseGUI(playerRef, chunkX, chunkZ, CustomPageLifetime.CanDismissOrCloseThroughInteraction);
             player.getPageManager().openCustomPage(ref, store, page);
         });
     }

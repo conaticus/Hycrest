@@ -15,7 +15,7 @@ public class NationBaseManager {
     private final HashMap<ChunkVector, NationBase> nationBaseLookup = new HashMap<>();
 
     public void addNationBase(NationBase base) {
-        for (ChunkVector chunk : base.getChunks()) {
+        for (ChunkVector chunk : base.chunks) {
             nationBaseLookup.put(chunk, base);
         }
     }

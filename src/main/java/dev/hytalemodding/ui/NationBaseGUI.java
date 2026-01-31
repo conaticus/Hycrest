@@ -7,13 +7,17 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.Notification;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.util.ColorParseUtil;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.io.PacketHandler;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.NotificationUtil;
 import dev.hytalemodding.NationBase.NationBase;
 import dev.hytalemodding.NationBase.NationBaseManager;
 import dev.hytalemodding.util.ChunkVector;
@@ -29,7 +33,7 @@ public class NationBaseGUI extends InteractiveCustomUIPage<NationBaseGUI.Data> {
     final private int chunkX;
     final private int chunkZ;
 
-    private NationBase nationBase;
+    final private NationBase nationBase;
 
     public NationBaseGUI(@Nonnull PlayerRef playerRef, int chunkX, int chunkZ, @Nonnull CustomPageLifetime lifetime) {
         super(playerRef, lifetime, Data.CODEC);
@@ -124,7 +128,15 @@ public class NationBaseGUI extends InteractiveCustomUIPage<NationBaseGUI.Data> {
         String button = actions[0];
 
         if (button.equals("ConfirmButton")) {
+            if (nationBase.name.isEmpty()) {
+                NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.raw("You must provide a name for your base.").color(Color.red));
+
+                this.sendUpdate();
+                return;
+            }
+
             NationBaseManager.getInstance().addNationBase(nationBase);
+            NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.raw(String.format("Nation Base '%s' successfully created", nationBase.name)).color(Color.green));
 
             this.close();
             return;

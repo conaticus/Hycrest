@@ -8,7 +8,7 @@ import java.util.*;
 
 public class NationBase {
     public UUID ownerId;
-    public String name;
+    public String name = "";
     public int size = 1;
 
     private ChunkVector centerChunk;
@@ -27,11 +27,7 @@ public class NationBase {
         this.chunks = this.getChunks();
     }
 
-    public boolean hasChunkAt(ChunkVector chunkLocation) {
-        return chunks.contains(chunkLocation);
-    }
-
-    Set<ChunkVector> getChunks() {
+    private Set<ChunkVector> getChunks() {
         Set<ChunkVector> chunks = new HashSet<>();
         chunks.add(centerChunk);
 
@@ -44,10 +40,24 @@ public class NationBase {
         return chunks;
     }
 
+    public boolean hasChunkAt(ChunkVector chunkLocation) {
+        return chunks.contains(chunkLocation);
+    }
+
     public boolean isOnBase(Vector3i position) {
         int chunkX = ChunkUtil.chunkCoordinate(position.x);
         int chunkZ = ChunkUtil.chunkCoordinate(position.z);
 
         return hasChunkAt(new ChunkVector(chunkX, chunkZ));
+    }
+
+    // TODO: Compare database id instead of central chunk
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NationBase other))
+            return false;
+
+        return Objects.equals(this.centerChunk, other.centerChunk);
     }
 }

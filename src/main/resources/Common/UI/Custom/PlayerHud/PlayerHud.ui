@@ -1,0 +1,40 @@
+$C = "../Common.ui";
+
+Group {
+    Group {
+        LayoutMode: Right;
+
+        Group {
+            LayoutMode: Top;
+            Anchor: (Width: 225, Top: 300, Bottom: 300, Right: 10);
+            Padding: (Full: 16);
+            Background: #0000007F;
+
+            Label {
+                Text: "Base Tasks";
+                Style: (FontSize: 20, RenderBold: true, HorizontalAlignment: Center);
+            }
+
+            Group #TaskList {
+                LayoutMode: Top;
+                Anchor: (Top: 10);
+
+                $C.@CheckBoxWithLabel {
+                    @Text = "Place Furnace";
+                }
+            }
+        }
+    }
+
+    Group {
+        LayoutMode: Bottom;
+        Anchor: (Bottom: 60, Left: 125);
+
+        Label #BaseLabel {
+            Padding: (Full: 10);
+
+            Style: (FontSize: 22, RenderBold: true);
+            Text: "";
+        }
+    }
+}

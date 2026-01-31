@@ -10,12 +10,16 @@ import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.EventTitleUtil;
 import dev.hytalemodding.NationBase.NationBase;
 import dev.hytalemodding.NationBase.NationBaseManager;
+import dev.hytalemodding.ui.PlayerHud;
+import dev.hytalemodding.ui.PlayerHudManager;
 import dev.hytalemodding.util.ChunkVector;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -29,7 +33,7 @@ public class PlayerMoveTickingSystem extends EntityTickingSystem<EntityStore> {
             return;
 
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-        if (playerRef == null)
+        if (playerRef == null || !playerRef.isValid())
             return;
 
         Vector3i currentPosition = playerRef.getTransform().getPosition().toVector3i();
@@ -38,18 +42,31 @@ public class PlayerMoveTickingSystem extends EntityTickingSystem<EntityStore> {
             if (currentPosition.equals(lastPosition))
                 return lastPosition;
 
-            this.onPlayerMoveBlock(playerRef, lastPosition, currentPosition);
+            if (lastPosition != null)
+                this.onPlayerMoveBlock(playerRef, lastPosition, currentPosition);
 
             return currentPosition;
         });
     }
 
     private void onPlayerMoveBlock(PlayerRef playerRef, Vector3i lastPosition, Vector3i position) {
-        var base = NationBaseManager.getInstance().getBaseAt(ChunkVector.fromPosition(position));
-        if (base == null)
+        NationBaseManager baseManager = NationBaseManager.getInstance();
+        NationBase base = baseManager.getBaseAt(ChunkVector.fromPosition(position));
+
+        PlayerHud playerHud = PlayerHudManager.getInstance().getPlayerHud(playerRef);
+        if (playerHud == null)
             return;
 
-        System.out.println(base.name);
+        if (base == null && playerHud.currentBase != null) {
+            playerHud.unsetBase();
+            return;
+        }
+
+        if (base == null || base.equals(playerHud.currentBase))
+            return;
+
+        playerHud.setBase(base);
+        EventTitleUtil.showEventTitleToPlayer(playerRef, Message.raw(base.name), Message.raw("You are entering a nation base, proceed with caution").color(Color.orange), true, null, 5, 1, 1);
     }
 
     @NullableDecl
